@@ -93,7 +93,6 @@ struct enactor_t : gunrock::enactor_t<problem_t> {
     auto G = P->get_graph();
 
     auto colors = P->result.colors;
-    auto randoms = P->randoms.data().get();
     auto iteration = E->iteration;
     auto n_vertices = G.get_number_of_vertices(); 
 
@@ -101,7 +100,9 @@ struct enactor_t : gunrock::enactor_t<problem_t> {
       // Regenerate random numbers.
       generate::random::uniform_distribution(P->randoms, float(0.0f),
                                              float(n_vertices));
-
+    
+    auto randoms = P->randoms.data().get();
+    
     auto color_me_in = [G, colors, randoms, iteration] __host__ __device__(
                            vertex_t const& vertex) -> bool {
       edge_t num_neighbors = G.get_number_of_neighbors(vertex);
